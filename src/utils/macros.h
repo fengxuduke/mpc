@@ -17,7 +17,7 @@
 
 #define  __FRAME_HEADER_VERSION__ 1
 
-#define SYSTEM_JOURNAL_DIR "/home/llx/Documents/trading/system"
+#define SYSTEM_JOURNAL_DIR "/home/feng/Documents/trading/system"
 #define SYSTEM_JOURNAL_NAME "SYSTEM_JOURNAL"
 
 

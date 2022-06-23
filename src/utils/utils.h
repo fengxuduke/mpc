@@ -10,6 +10,11 @@
 #include<vector>
 #include<regex>
 #include <sstream>
+#include <iostream>
+#if defined __linux__  
+#include <sched.h>
+#endif
+
 inline std::vector<std::string> split(const std::string& input, const std::string& regex) {
     // passing -1 as the submatch index parameter performs splitting
     std::regex re(regex);
