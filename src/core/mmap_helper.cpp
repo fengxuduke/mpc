@@ -10,8 +10,10 @@ void* LoadPageBuffer(const string& path, int size, bool isWriting, bool quickMod
 
     if (fd < 0)
     {
-        if (!isWriting)
+        if (!isWriting){
+            std::cout<<"failed to open non-existing file readonly:"<<path<<std::endl;
             return nullptr;
+        }
         perror("Cannot create/write the file");
         exit(EXIT_FAILURE);
     }

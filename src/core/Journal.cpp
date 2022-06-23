@@ -7,13 +7,13 @@
 JournalPtr Journal::create(const string &dir, const string &jname,bool isWriting,bool quickMode)
 {
     JournalPtr jp = JournalPtr(new Journal(isWriting));
+    std::cout<<"Journal::create"<<jp<<std::endl;
     jp->directory = dir;
     jp->jname = jname;
     jp->quickMode=quickMode;
 
     /*准备第一次要用到的page*/
     jp->loadNextPage();
-
     return jp;
 }
 
@@ -61,8 +61,12 @@ void* Journal::locateFrame()
         }
         return frame;
     }
-    else
-        return curPage->locateReadableFrame();
+    else{
+        if ((curPage.get() != nullptr && curPage->isAtPageEnd()) || curPage.get() == nullptr)
+            loadNextPage();
+        if (curPage.get() != nullptr)
+            return curPage->locateReadableFrame();
+        }
 };
 
 
