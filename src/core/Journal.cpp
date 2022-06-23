@@ -7,7 +7,6 @@
 JournalPtr Journal::create(const string &dir, const string &jname,bool isWriting,bool quickMode)
 {
     JournalPtr jp = JournalPtr(new Journal(isWriting));
-    std::cout<<"Journal::create"<<jp<<std::endl;
     jp->directory = dir;
     jp->jname = jname;
     jp->quickMode=quickMode;
