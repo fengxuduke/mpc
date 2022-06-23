@@ -1,6 +1,6 @@
 
-#ifndef YIJINJING_TEST_STAT_H
-#define YIJINJING_TEST_STAT_H
+#ifndef MPC_STAT_H
+#define MPC_STAT_H
 
 #include <stdlib.h>
 
