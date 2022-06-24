@@ -80,8 +80,13 @@ make
 ### 测试运行
 
 打开一个终端，运行
+
 ./service/server
+
 打开第二个终端，运行
+
 ./mpcreader
+
 打开第三个终端，运行
+
 ./mpcwriter
