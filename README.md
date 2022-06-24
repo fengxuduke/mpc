@@ -85,6 +85,10 @@ make
 ```
 
 ### 测试运行
+先保证正确的路径存在
+
+mkdir -p /tmp/trading/testjournal
+mkdir -p /tmp/traing/system
 
 打开一个终端，运行
 
