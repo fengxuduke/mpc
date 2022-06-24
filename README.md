@@ -24,7 +24,7 @@ using std::cout;
 using std::endl;
 
 int main() {
-    auto writer=Writer::create("/home/llx/Documents/trading/testjournal","testj5");
+    auto writer=Writer::create("/home/feng/Documents/trading/testjournal","testj5");
     for(int i=0;i<=100;++i) {
         usleep(10000000);
         writer->WriteFrame(static_cast<void *>(&i), sizeof(int));
@@ -50,7 +50,7 @@ using std::endl;
 int main() {
 
     auto reader=Reader::create("testReader");
-    reader->addJournal("/home/llx/Documents/trading/testjournal","testj5");
+    reader->addJournal("/home/feng/Documents/trading/testjournal","testj5");
     while(true){
         auto frameptr= static_cast<FrameHeader *> (reader->readFrame());
         if(frameptr== nullptr)
