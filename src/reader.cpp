@@ -9,7 +9,7 @@ int main() {
     cpu_set_affinity(1);
     auto reader=Reader::create("testReader");
     std::cout<<"before addJournal"<<std::endl;
-    reader->addJournal("/home/feng/Documents/trading/testjournal","testj5");
+    reader->addJournal("/tmp/trading/testjournal","testj5");
     std::cout<<"after addJournal"<<std::endl;
     while(true){
         // auto frameptr= static_cast<Frame *> (reader->readFrame());

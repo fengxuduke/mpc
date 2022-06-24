@@ -7,7 +7,7 @@ using std::endl;
 
 int main() {
     cpu_set_affinity(2);
-    auto writer=Writer::create("/home/feng/Documents/trading/testjournal","testj5");
+    auto writer=Writer::create("/tmp/trading/testjournal","testj5");
     for(int i=0;i<=100;++i) {
         usleep(10000000);
         writer->WriteFrame(static_cast<void *>(&i), sizeof(int));
