@@ -20,11 +20,13 @@
 
 #include <iostream>
 #include "communicator/Writer.h"
+#include "utils/stat.h"
 using std::cout;
 using std::endl;
 
 int main() {
-    auto writer=Writer::create("/home/feng/Documents/trading/testjournal","testj5");
+    cpu_set_affinity(2);
+    auto writer=Writer::create("/tmp/trading/testjournal","testj5");
     for(int i=0;i<=100;++i) {
         usleep(10000000);
         writer->WriteFrame(static_cast<void *>(&i), sizeof(int));
@@ -44,19 +46,24 @@ int main() {
 
 #include <iostream>
 #include "communicator/Reader.h"
+#include "utils/stat.h"
 using std::cout;
 using std::endl;
 
 int main() {
-
+    cpu_set_affinity(1);
     auto reader=Reader::create("testReader");
-    reader->addJournal("/home/feng/Documents/trading/testjournal","testj5");
+    std::cout<<"before addJournal"<<std::endl;
+    reader->addJournal("/tmp/trading/testjournal","testj5");
+    std::cout<<"after addJournal"<<std::endl;
     while(true){
-        auto frameptr= static_cast<FrameHeader *> (reader->readFrame());
+        // auto frameptr= static_cast<Frame *> (reader->readFrame());
+        void* frameptr = reader->readFrame();
         if(frameptr== nullptr)
             continue;
         else{
-        long duration=getNanoTime()-frameptr->nano;
+        auto frame = Frame(frameptr);
+        long duration=getNanoTime()-frame.getNano();
         std::cout<<"time duration:"<<duration <<std::endl;
         }
     }
