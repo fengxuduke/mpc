@@ -1,6 +1,7 @@
 #include <iostream>
 #include "communicator/Reader.h"
 #include "utils/stat.h"
+#include "ctp/ThostFtdcUserApiStruct.h"
 //#include "utils.h"
 using std::cout;
 using std::endl;
@@ -19,7 +20,8 @@ int main() {
         else{
         auto frame = Frame(frameptr);
         long duration=getNanoTime()-frame.getNano();
-        std::cout<<"time duration:"<<duration <<std::endl;
+        auto data = static_cast<CThostFtdcDepthMarketDataField*> (frame.getData() );
+        std::cout<<"time duration:"<<duration<<" "<<data->LastPrice<<std::endl;
         }
     }
 
