@@ -121,7 +121,5 @@ mkdir -p /tmp/trading/testjournal /tmp/trading/system
 
 ./mpcwriter
 
-
-
-###　运行结果
+### 运行结果
 运行统计数据见文件runstatistics.csv, 左边是写入进程延时，右边是读入进程延时，单位是纳秒．
