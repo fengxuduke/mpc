@@ -21,20 +21,39 @@
 #include <iostream>
 #include "communicator/Writer.h"
 #include "utils/stat.h"
+#include "ctp/ThostFtdcUserApiStruct.h"
+//#include "utils.h"
 using std::cout;
 using std::endl;
 
 int main() {
     cpu_set_affinity(2);
     auto writer=Writer::create("/tmp/trading/testjournal","testj5");
-    for(int i=0;i<=100;++i) {
-        usleep(10000000);
-        writer->WriteFrame(static_cast<void *>(&i), sizeof(int));
+    int i=-1;
+    CThostFtdcDepthMarketDataField datas[102];
+    size_t length = sizeof(CThostFtdcDepthMarketDataField);
+    std::cout<<"data size="<<length<<std::endl;
+    datas[0].LastPrice=i;
+    writer->WriteFrame(static_cast<void *>(&datas[0]), length); 
+    long long duration = getNanoTime()-(writer->frame).getNano();
+    std::cout<<"time duration:"<<duration <<std::endl;   
+    for(int i=0;i<=100;) {
+        
+        if (duration>125000000){
+           datas[i+1].LastPrice=i;
+    	   writer->WriteFrame(static_cast<void *>(&datas[i+1]), length);
+           duration=getNanoTime()-(writer->frame).getNano();
+           std::cout<<"time duration:"<<duration <<std::endl;
+           ++i;   
+	}
+        else
+           duration=getNanoTime()-(writer->frame).getNano();
+        
+        
     }
 
     return 0;
 }
-
 ```
 
 ### 构建reader
@@ -47,6 +66,8 @@ int main() {
 #include <iostream>
 #include "communicator/Reader.h"
 #include "utils/stat.h"
+#include "ctp/ThostFtdcUserApiStruct.h"
+//#include "utils.h"
 using std::cout;
 using std::endl;
 
@@ -64,7 +85,8 @@ int main() {
         else{
         auto frame = Frame(frameptr);
         long duration=getNanoTime()-frame.getNano();
-        std::cout<<"time duration:"<<duration <<std::endl;
+        auto data = static_cast<CThostFtdcDepthMarketDataField*> (frame.getData() );
+        std::cout<<"time duration:"<<duration<<" "<<data->LastPrice<<std::endl;
         }
     }
 
@@ -85,10 +107,7 @@ make
 ```
 
 ### 测试运行
-先保证正确的路径存在
-
-mkdir -p /tmp/trading/testjournal
-mkdir -p /tmp/traing/system
+mkdir -p /tmp/trading/testjournal /tmp/trading/system
 
 打开一个终端，运行
 
@@ -101,3 +120,6 @@ mkdir -p /tmp/traing/system
 打开第三个终端，运行
 
 ./mpcwriter
+
+###　运行结果
+运行统计数据见文件runstatistics.csv, 左边是写入进程延时，右边是读入进程延时，单位是纳秒．
