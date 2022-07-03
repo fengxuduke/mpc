@@ -1,0 +1,117 @@
+write process,,,read process,,
+set cpu affinity success,cpu_id 2,,set cpu affinity success, cpu_id 1,
+page buffer ,140316854689792,,page buffer ,139692924801024,
+frame header init ,140316854689929,,frame header init ,139692924801161,
+page buffer ,140316720472064,,reply,testReader|1|NULL|0|0,
+frame header init ,140316720472201,,before addJournal,,
+reply,testj5|2|testj5|1|0,,reply,testReader|5|testj5|-1|0,
+data size=408,,,page buffer ,139692790583296,
+,,,frame header init ,139692790583433,
+,,,after addJournal,,
+time duration,2203,,time duration,5667,-1
+time duration,331,,time duration,3509,0
+time duration,349,,time duration,4377,1
+time duration,401,,time duration,3609,2
+time duration,341,,time duration,4374,3
+time duration,377,,time duration,3434,4
+time duration,381,,time duration,4152,5
+time duration,407,,time duration,3913,6
+time duration,390,,time duration,3358,7
+time duration,368,,time duration,4119,8
+time duration,350,,time duration,3606,9
+time duration,307,,time duration,3537,10
+time duration,306,,time duration,3243,11
+time duration,251,,time duration,3371,12
+time duration,342,,time duration,4259,13
+time duration,478,,time duration,4543,14
+time duration,359,,time duration,3556,15
+time duration,343,,time duration,3321,16
+time duration,308,,time duration,3837,17
+time duration,360,,time duration,4136,18
+time duration,362,,time duration,3572,19
+time duration,308,,time duration,3388,20
+time duration,239,,time duration,3226,21
+time duration,382,,time duration,3450,22
+time duration,368,,time duration,3785,23
+time duration,308,,time duration,3498,24
+time duration,399,,time duration,3481,25
+time duration,226,,time duration,3305,26
+time duration,1129,,time duration,4295,27
+time duration,342,,time duration,3579,28
+time duration,342,,time duration,4141,29
+time duration,403,,time duration,4379,30
+time duration,315,,time duration,3907,31
+time duration,390,,time duration,3789,32
+time duration,317,,time duration,3379,33
+time duration,342,,time duration,3537,34
+time duration,397,,time duration,3554,35
+time duration,360,,time duration,4365,36
+time duration,312,,time duration,3296,37
+time duration,1103,,time duration,4185,38
+time duration,347,,time duration,3373,39
+time duration,343,,time duration,3627,40
+time duration,342,,time duration,3964,41
+time duration,329,,time duration,3409,42
+time duration,319,,time duration,3299,43
+time duration,358,,time duration,3508,44
+time duration,359,,time duration,3566,45
+time duration,598,,time duration,4328,46
+time duration,342,,time duration,3695,47
+time duration,369,,time duration,3929,48
+time duration,402,,time duration,4248,49
+time duration,378,,time duration,3595,50
+time duration,375,,time duration,4094,51
+time duration,362,,time duration,3937,52
+time duration,686,,time duration,4510,53
+time duration,342,,time duration,4195,54
+time duration,336,,time duration,3618,55
+time duration,343,,time duration,3631,56
+time duration,361,,time duration,3107,57
+time duration,344,,time duration,4245,58
+time duration,360,,time duration,3553,59
+time duration,341,,time duration,4308,60
+time duration,391,,time duration,3782,61
+time duration,362,,time duration,4282,62
+time duration,359,,time duration,3668,63
+time duration,342,,time duration,4308,64
+time duration,307,,time duration,4210,65
+time duration,341,,time duration,4385,66
+time duration,365,,time duration,3682,67
+time duration,341,,time duration,3730,68
+time duration,423,,time duration,3491,69
+time duration,343,,time duration,4373,70
+time duration,392,,time duration,4790,71
+time duration,400,,time duration,3661,72
+time duration,366,,time duration,4028,73
+time duration,358,,time duration,3951,74
+time duration,341,,time duration,3748,75
+time duration,341,,time duration,3613,76
+time duration,371,,time duration,3719,77
+time duration,307,,time duration,3745,78
+time duration,312,,time duration,3373,79
+time duration,312,,time duration,3788,80
+time duration,315,,time duration,3259,81
+time duration,360,,time duration,3850,82
+time duration,352,,time duration,4237,83
+time duration,313,,time duration,4201,84
+time duration,374,,time duration,3570,85
+time duration,388,,time duration,4149,86
+time duration,362,,time duration,3964,87
+time duration,312,,time duration,3465,88
+time duration,343,,time duration,3404,89
+time duration,328,,time duration,3502,90
+time duration,853,,time duration,4405,91
+time duration,358,,time duration,3057,92
+time duration,492,,time duration,3637,93
+time duration,313,,time duration,3379,94
+time duration,315,,time duration,4162,95
+time duration,361,,time duration,4025,96
+time duration,317,,time duration,4497,97
+time duration,345,,time duration,3419,98
+time duration,329,,time duration,4390,99
+time duration,308,,time duration,3258,100
+reply,testj5|4|NULL|-1|0,,,,
+realse,,,,,
+after realse,,,,,
+realse,,,,,
+after realse,,,,,
