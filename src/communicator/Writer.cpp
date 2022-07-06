@@ -19,7 +19,7 @@ WriterPtr Writer::create(const char * dir,const char * jname){
     auto writer=WriterPtr(new Writer);
     writer->system_journal=SysJournal::getInstance();
     writer->journal=Journal::create(dir,jname,true,false);
-    writer->name=string(jname);
+    writer->name=string(dir)+string(jname);
 
     if(writer->Regist()==0)
         return writer;
