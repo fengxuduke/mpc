@@ -1,0 +1,19 @@
+我们关心下面的问题，比如同时接受相同行情源的IC2209,IF2207 两个ticker, 一种办法是同一个进程，同时订阅２个ｔｉｃｋer的推送，还有一种方法是两个ｔｉｃｋer分别用不同的进程接受行情．那种更快落地？
+
+我们做了测试，在每个进程中记录交易所时间戳，落地时间．跑了半天的数据．然后用latencystat.py 进行分析．在每个切片时间内，按照先计算单进程的时间差，OneSourceGap为两个ｔｉｃｋer先后落地的本地时间戳相减, 然后计算２进程的时间差，TwoSourceGap. 然后用TwoSourceGap-OneSourceGap 代表两种方法的内部耗时差别．半天大概可以获取１．５万条数据，用统计检验来研究这个内部耗时区别.
+
+运行结果如下：
+OneSource Gaps between two tickers: mean=1027489.9517290216, the probability that mean=0 is <=0.0000
+p-value <1e-4表明onesource gaps 在统计意义上显著>0
+
+TwoSource Gaps between two tickers: mean=901303.3535937684, the probability that mean=0 is <=0.0000
+p-value <1e-4表明twosource gaps 在统计意义上显著>0
+
+TwoSourceGaps-OneSourceGaps: mean=-126186.59813525315, the probability that mean=0 is <=0.0061
+p-value<1e-2表明two source gaps between tickers 在统计意义上显著<one source gaps between tickers.
+
+结论：
+1. 同一个切片ticker之间的内部延时大概在１microsecond. 这个可能是ｃｔｐ的代码处理延时．
+2. 应该尽可能用不同的进程来接受不同的ticker, 一来降低客户端的行情处理延时，而来可以降低ctp 内部处理延时．
+
+
