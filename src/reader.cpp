@@ -11,15 +11,17 @@ using std::endl;
 long long TickProcessDurations[40000*72];
 TThostFtdcInstrumentIDType TickedInstrumentIDs[40000*72];
 long long TickedTimes[40000*72];
+TThostFtdcTimeType TickExchangeTimes[40000*72];
+TThostFtdcMillisecType TickExchangeMillisecs[40000*72];
 const string dumpfilepath_="/home/feng/mpc-yijinjing-mmap/ctp-run-statistics/ctp_read_stats.csv";
 int tick_idx = -1;
 void dumptofile(  ){
     int i=0;
     std::ofstream fout;
     fout.open(dumpfilepath_.c_str());
-    fout<<"arrivaltime,"<<"ticker,"<<"latency"<<std::endl;
+    fout<<"arrivaltime,"<<"exchangetime,"<<"exchangemillisec,"<<"ticker,"<<"latency"<<std::endl;
     for(i=0;i<=tick_idx;i++){
-        fout<<TickedTimes[i]<<","<<TickedInstrumentIDs[i]<<","<<TickProcessDurations[i]<<std::endl;
+        fout<<TickedTimes[i]<<","<<TickExchangeTimes[i]<<","<<TickExchangeMillisecs[i]<<","<<TickedInstrumentIDs[i]<<","<<TickProcessDurations[i]<<std::endl;
     }
 };
 
@@ -61,8 +63,9 @@ int main() {
                 auto data = static_cast<CThostFtdcDepthMarketDataField*> (frame.getData() );
                 ++tick_idx;            
                 TickedTimes[tick_idx] = frame.getNano();            
-                mempcpy(TickedInstrumentIDs[tick_idx], data->InstrumentID, sizeof(TThostFtdcInstrumentIDType));
-                TickedInstrumentIDs[tick_idx][sizeof(TThostFtdcInstrumentIDType)-1]='\0';
+                strcpy(TickedInstrumentIDs[tick_idx], data->InstrumentID);
+                strcpy(TickExchangeTimes[tick_idx], data->UpdateTime);
+                TickExchangeMillisecs[tick_idx] = data->UpdateMillisec;
                 TickProcessDurations[tick_idx] = getNanoTime() - TickedTimes[tick_idx];
             }
         }
