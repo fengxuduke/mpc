@@ -113,7 +113,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             if ((pRspInfo!=nullptr) & (pRspInfo->ErrorID==0)){
                 std::cout<<"subscribe success:"<<pSpecificInstrument->InstrumentID<<std::endl;
                 if (writers.find( pSpecificInstrument->InstrumentID ) == writers.end()){
-                    auto writer=Writer::create("/tmp/trading/testjournal2",(string(pSpecificInstrument->InstrumentID)+string("2")).c_str());
+                    auto writer=Writer::create("/tmp/trading/testjournal", pSpecificInstrument->InstrumentID);
                     writers[pSpecificInstrument->InstrumentID] = writer;
                     }
             }
@@ -132,9 +132,10 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             writer->WriteFrame(static_cast<void *>(pDepthMarketData), mktdata_length_); 
             ++tick_idx;
             TickedTimes[tick_idx] = (writer->frame).getNano();
-            TickWriteDurations[tick_idx]=getNanoTime() - TickedTimes[tick_idx];
             strcpy(TickedInstrumentIDs[tick_idx], pDepthMarketData->InstrumentID);
             strcpy(TickExchangeTimes[tick_idx], pDepthMarketData->UpdateTime);
+            TickExchangeMillisecs[tick_idx] = pDepthMarketData->UpdateMillisec;
+            TickWriteDurations[tick_idx]=getNanoTime() - TickedTimes[tick_idx];
             
         };
         
@@ -183,7 +184,7 @@ int main() {
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IF2207"};
+    std::vector<std::string> instruments={"IF2207","IF2208","IF2209","IF2212"};
     marketdata.subscribe(instruments);
     
     std::cout<<"subscribed"<<std::endl;

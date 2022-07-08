@@ -40,28 +40,17 @@ int main() {
     int month=0;
     int reader_idx=0;
     std::vector<int> months={7,8,9,12};
-    TThostFtdcInstrumentIDType instrument;
-    for (auto& month:months){
-        sprintf(instrument, "IC22%02d", month);
-        reader = Reader::create(instrument);
+    std::vector<std::string> instruments={"IC2207","IC2208","IC2209","IC2212","IF2207","IF2208","IF2209","IF2212"};
+    for (auto& instrument:instruments){
+        reader = Reader::create(instrument.c_str());
         readers[reader_idx++]=reader;
-        reader->addJournal("/tmp/trading/testjournal", instrument);
-        
-        sprintf(instrument, "IF22%02d", month);
-        reader = Reader::create(instrument);
-        readers[reader_idx++]=reader;
-        reader->addJournal("/tmp/trading/testjournal", instrument);
-        
-        sprintf(instrument, "IH22%02d", month);
-        reader = Reader::create(instrument);
-        readers[reader_idx++]=reader;
-        reader->addJournal("/tmp/trading/testjournal", instrument);
+        reader->addJournal("/tmp/trading/testjournal", instrument.c_str());
     }
     
     std::cout<<"after addJournal"<<std::endl;
     while(true){
         // auto frameptr= static_cast<Frame *> (reader->readFrame());
-        for (reader_idx=0;reader_idx<months.size()*3;reader_idx++){
+        for (reader_idx=0;reader_idx<instruments.size();reader_idx++){
             auto& reader = readers[reader_idx];
             void* frameptr = reader->readFrame();
             if(frameptr== nullptr)
