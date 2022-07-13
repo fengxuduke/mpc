@@ -1,0 +1,24 @@
+### 问题
+这次研究是为了搞清楚ctp接受的中金所的指数期货合约之间有没有固定的顺序．一开始的猜测是所有合约按字母顺序依次发送．这个猜测只是部分对．
+
+### 研究过程
+2022年7月13日上午，订阅所有指数期货合约，然后跑了一上午．测试的代码是readwritecheck.py 中的runtickerorders, 其中我们为了准确性，抛弃了９：３１交易所时间戳以前的行情．运行结果如下：
+>>> feedorders, readorders, IFfeedorders, ICfeedorders, IHfeedorders, feedorders2207, feedorders2208, feedorders2209, feedorders2212=readwritecheck.runtickerorders(feedpaths=['./ctp_accept_stats.csv' ],readpaths=['./ctp_read_stats.csv'])
+is feedorders lexi-sorted? False
+is IFfeedorders lexi-sorted? True
+is ICfeedorders lexi-sorted? True
+is IHfeedorders lexi-sorted? True
+is feedorders2207 lexi-sorted? True
+is feedorders2208 lexi-sorted? True
+is feedorders2209 lexi-sorted? True
+is feedorders2212 lexi-sorted? True
+
+### 研究结论
+这个结果表明
+１．对于固定的指数标的，如对于IF, 所有月份的合约ｃｔｐ的确是按照字母顺序发送的
+２．对于固定的月份，例如２２０８，所有的标的合约的确也是按照字母顺序发送的．
+３．但是所有合约不存在字母顺序
+这个蕴含了：
+１．这个结果说明，当我们测试多进程或者单进程订阅延时比较时，应该采用有顺序的合约，例如同一个标的不同月份，或者同一个月份不同标的，进行比较．
+
+２．对交易所的行情切片机制有什么合理的猜测呢？

@@ -32,7 +32,7 @@ def run():
     
     ''' '''
     onesourcelines = list(csv.reader(open('./ctp_accept_stats.csv')))[1:]
-    twosourcelines = list(csv.reader(open('./ctp_accept_IC2209_stats.csv')))[1:]
+    twosourcelines = list(csv.reader(open('./ctp_accept_IC2207_stats.csv')))[1:]
     twosourcelines += list(csv.reader(open('./ctp_accept_IF2207_stats.csv')))[1:]
     processlines(onesourcelines, OneSourceData)
     processlines(twosourcelines, TwoSourcesData)
