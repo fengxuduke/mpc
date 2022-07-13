@@ -184,7 +184,7 @@ int main() {
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IC2207","IC2208","IC2209","IC2212"};
+    std::vector<std::string> instruments={"IC2207"};
     marketdata.subscribe(instruments);
     
     std::cout<<"subscribed"<<std::endl;

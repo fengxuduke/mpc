@@ -113,7 +113,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             if ((pRspInfo!=nullptr) & (pRspInfo->ErrorID==0)){
                 std::cout<<"subscribe success:"<<pSpecificInstrument->InstrumentID<<std::endl;
                 if (writers.find( pSpecificInstrument->InstrumentID ) == writers.end()){
-                    auto writer=Writer::create("/tmp/trading/testjournal", pSpecificInstrument->InstrumentID);
+                    auto writer=Writer::create("/tmp/trading/testjournal2", (string(pSpecificInstrument->InstrumentID)+string("2")).c_str());
                     writers[pSpecificInstrument->InstrumentID] = writer;
                     }
             }
@@ -184,7 +184,7 @@ int main() {
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IF2207","IF2208","IF2209","IF2212"};
+    std::vector<std::string> instruments={"IF2207"};
     marketdata.subscribe(instruments);
     
     std::cout<<"subscribed"<<std::endl;
