@@ -28,12 +28,16 @@ def processlines(rows, result_dict):
         
     
 
-def run():
+def run( onesourcepaths = [ './ctp_accept_stats.csv' ], twosourcepaths = ['./ctp_accept_IF2208_stats.csv', './ctp_accept_IF2207_stats.csv' ] ):
     
     ''' '''
-    onesourcelines = list(csv.reader(open('./ctp_accept_stats.csv')))[1:]
-    twosourcelines = list(csv.reader(open('./ctp_accept_IC2207_stats.csv')))[1:]
-    twosourcelines += list(csv.reader(open('./ctp_accept_IF2207_stats.csv')))[1:]
+    onesourcelines=[]
+    twosourcelines = []
+    for onesourcepath in onesourcepaths:
+        onesourcelines += list(csv.reader(open(onesourcepath)))[1:]
+    for twosourcepath in twosourcepaths:        
+        twosourcelines += list(csv.reader(open(twosourcepath)))[1:]
+        print(twosourcepath, len(twosourcelines), twosourcelines[-1])
     processlines(onesourcelines, OneSourceData)
     processlines(twosourcelines, TwoSourcesData)
     startupdatetime = min( min(OneSourceData.keys()), min(TwoSourcesData.keys()) )
@@ -41,20 +45,20 @@ def run():
         if updatetime<startupdatetime:
             continue
         if len(info.keys())<2:
-            print('<2 ticks for %s, skipped'%updatetime)
+            # print('<2 ticks for %s, skipped'%updatetime)
             continue
         ticktimestamps = sorted( list(info.items()), key=lambda x: x[1][0]  )
         TwoSourceGaps[updatetime] = ticktimestamps[1][1][0]-ticktimestamps[0][1][0]-ticktimestamps[1][1][1]
         if updatetime not in OneSourceData:
-            print('error: missing %s in onesourcedata'%updatetime)
+            # print('error: missing %s in onesourcedata'%updatetime)
             continue
         onesourceinfo = OneSourceData[updatetime]
         if ticktimestamps[0][0] not in onesourceinfo:
-            print('error: missing tick %s, %s'%(updatetime, ticktimestamps[0][0]) )
+            # print('error: missing tick %s, %s'%(updatetime, ticktimestamps[0][0]) )
             OneSourceGaps[updatetime] = numpy.NaN
             continue
         if ticktimestamps[1][0] not in onesourceinfo:
-            print('error: missing tick %s, %s'%(updatetime, ticktimestamps[1][0]) )
+            # print('error: missing tick %s, %s'%(updatetime, ticktimestamps[1][0]) )
             OneSourceGaps[updatetime] = numpy.NaN
             continue
         OneSourceGaps[updatetime] = onesourceinfo[ticktimestamps[1][0]][0] -onesourceinfo[ticktimestamps[0][0]][0]
@@ -63,10 +67,11 @@ def run():
     TwoSourceGapsTS = pandas.Series(TwoSourceGaps)
     TwoMinusOneTS = TwoSourceGapsTS-OneSourceGapsTS
     
-    condition = ( (TwoMinusOneTS-TwoMinusOneTS.mean()).abs()<=5*TwoMinusOneTS.std() ) & (~pandas.isna(TwoMinusOneTS))
+    
     #to student t-test for 0 mean
     #first remove outliers
     for name, ts in zip( ['OneSourceGaps', "TwoSourceGaps", "TwoSourceGaps-OneSourceGaps"], [OneSourceGapsTS, TwoSourceGapsTS, TwoMinusOneTS] ):
+        condition = ( (ts-ts.mean()).abs()<=5*ts.std() ) & (~pandas.isna(ts))
         ts = ts[condition]
         t,p= ttest_1samp(ts,0.0)
         print("%s: mean=%s, the probability that mean=0 is <=%.4f"%(name, ts.mean(), p))

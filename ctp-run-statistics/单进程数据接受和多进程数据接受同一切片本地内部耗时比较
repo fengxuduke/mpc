@@ -5,6 +5,10 @@
 
 2022.7.13: 我们做了测试，用IC2207,IF2207两个合约，在每个进程中记录交易所时间戳，落地时间．跑了下午半天的数据．然后用latencystat.py 进行分析．在每个切片时间内，按照先计算单进程的时间差，OneSourceGap为两个ticker先后落地的本地时间戳相减, 然后计算２进程的时间差，TwoSourceGap. 然后用TwoSourceGap-OneSourceGap 代表两种方法的内部耗时差别．半天大概可以获取１．５万条数据，用统计检验来研究这个内部耗时区别.
 
+2022.7.14:我们做了测试，用IF2208,IF2207两个合约，在每个进程中记录交易所时间戳，落地时间．跑了上午半天的数据．然后用latencystat.py 进行分析．在每个切片时间内，按照先计算单进程的时间差，OneSourceGap为两个ticker先后落地的本地时间戳相减, 然后计算２进程的时间差，TwoSourceGap. 然后用TwoSourceGap-OneSourceGap 代表两种方法的内部耗时差别．半天大概可以获取１．５万条数据，用统计检验来研究这个内部耗时区别.
+
+2022.7.15:我们做了测试，用IF2208,IF2207两个合约，在每个进程中记录交易所时间戳，落地时间．跑了下午半天的数据．然后用latencystat.py 进行分析．计算２进程的时间差，TwoSourceGap. 
+
 ### 测试结果分析
 2022.7.8 运行结果如下：
 OneSource Gaps between two tickers: mean=1027489.9517290216, the probability that mean=0 is <=0.0000
@@ -26,8 +30,24 @@ p-value <1e-4表明twosource gaps 在统计意义上显著>0
 TwoSourceGaps-OneSourceGaps: mean=299915.6826930392, the probability that mean=0 is <=0.0002
 p-value<1e-2表明two source gaps between tickers >one source gaps between tickers 在统计意义上显著.
 
+2022.7.14 运行结果如下：
+OneSourceGaps: mean=327353.57252376573, the probability that mean=0 is <=0.0000
+p-value <1e-4表明onesource gaps 在统计意义上显著>0
+
+TwoSourceGaps: mean=1295308.0162526832, the probability that mean=0 is <=0.0000
+p-value <1e-4表明twosource gaps 在统计意义上显著>0
+
+TwoSourceGaps-OneSourceGaps: mean=967954.4437289175, the probability that mean=0 is <=0.0000
+p-value<1e-2表明two source gaps between tickers >one source gaps between tickers 在统计意义上显著.
+
+2022.7.15 运行结果如下：
+TwoSourceGaps: mean=782490.7097697859, the probability that mean=0 is <=0.0000
+p-value<1e-4 表明twosource gaps 在统计意义上显著>0
+
+
+
 
 ### 结论：
-1. 同一个切片ticker之间的内部延时大概在１microsecond. 这个可能是ｃｔｐ的代码处理延时．
-2. 应该尽可能用不同的进程来接受不同的ticker, 一来降低客户端的行情处理延时，而来可以降低ctp 内部处理延时．
+1. 同一个切片相邻ticker之间的同一个进程内部延时大概在0.3microsecond. 而不同进程的延时则提高到0.78microsecond.
+2. 应该尽可能用一个进程来接受所有ticker, 一来降低客户端的行情处理延时，而来可以降低ctp 内部处理延时．
 
