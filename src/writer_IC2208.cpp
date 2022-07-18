@@ -113,7 +113,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             if ((pRspInfo!=nullptr) & (pRspInfo->ErrorID==0)){
                 std::cout<<"subscribe success:"<<pSpecificInstrument->InstrumentID<<std::endl;
                 if (writers.find( pSpecificInstrument->InstrumentID ) == writers.end()){
-                    auto writer=Writer::create("/tmp/trading/testjournal", pSpecificInstrument->InstrumentID);
+                    auto writer=Writer::create("/tmp/trading/testjournal1", (string(pSpecificInstrument->InstrumentID)+string("1")).c_str());
                     writers[pSpecificInstrument->InstrumentID] = writer;
                     }
             }
@@ -166,7 +166,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
         const string dumpfilepath_;
 };
 
-MarketDataCTP marketdata("/home/feng/mpc-yijinjing-mmap/ctp-run-statistics/ctp_accept_IC2209_stats.csv");
+MarketDataCTP marketdata("/home/feng/mpc-yijinjing-mmap/ctp-run-statistics/ctp_accept_IC2207_stats.csv");
 void signal_callback_handler(int signum) {
    std::cout << "Caught signal " << signum << std::endl;
    // Terminate program
@@ -184,7 +184,7 @@ int main() {
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IC2209"};
+    std::vector<std::string> instruments={"IC2208"};
     marketdata.subscribe(instruments);
     
     std::cout<<"subscribed"<<std::endl;

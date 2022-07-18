@@ -175,7 +175,7 @@ void signal_callback_handler(int signum) {
 };
 
 int main() {
-    cpu_set_affinity(3);
+    cpu_set_affinity(2);
     signal(SIGINT, signal_callback_handler);
     marketdata.start();
     while( !marketdata.IsLoggedIn() ){

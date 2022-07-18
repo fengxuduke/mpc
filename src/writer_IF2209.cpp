@@ -4,10 +4,10 @@
 #include "utils/stat.h"
 #include <signal.h>
 #include "ctpconfig.h"
+
 //#include "utils.h"
 using std::cout;
 using std::endl;
-
 
 // CTPSUBSCRIBEPATTERNS = os.environ.get('CTPSUBSCRIBEPATTERNS','IF22%02d,IF23%02d,IH22%02d,IH23%02d,IC22%02d,IC23%02d')
 
@@ -113,7 +113,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             if ((pRspInfo!=nullptr) & (pRspInfo->ErrorID==0)){
                 std::cout<<"subscribe success:"<<pSpecificInstrument->InstrumentID<<std::endl;
                 if (writers.find( pSpecificInstrument->InstrumentID ) == writers.end()){
-                    auto writer=Writer::create("/tmp/trading/testjournal", pSpecificInstrument->InstrumentID);
+                    auto writer=Writer::create("/tmp/trading/testjournal2", (string(pSpecificInstrument->InstrumentID)+string("2")).c_str());
                     writers[pSpecificInstrument->InstrumentID] = writer;
                     }
             }
@@ -166,7 +166,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
         const string dumpfilepath_;
 };
 
-MarketDataCTP marketdata("/home/feng/mpc-yijinjing-mmap/ctp-run-statistics/ctp_accept_IC2209_stats.csv");
+MarketDataCTP marketdata("/home/feng/mpc-yijinjing-mmap/ctp-run-statistics/ctp_accept_IF2207_stats.csv");
 void signal_callback_handler(int signum) {
    std::cout << "Caught signal " << signum << std::endl;
    // Terminate program
@@ -175,7 +175,7 @@ void signal_callback_handler(int signum) {
 };
 
 int main() {
-    cpu_set_affinity(3);
+    cpu_set_affinity(2);
     signal(SIGINT, signal_callback_handler);
     marketdata.start();
     while( !marketdata.IsLoggedIn() ){
@@ -184,7 +184,7 @@ int main() {
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IC2209"};
+    std::vector<std::string> instruments={"IF2209"};
     marketdata.subscribe(instruments);
     
     std::cout<<"subscribed"<<std::endl;
