@@ -10,11 +10,13 @@ OneSourceData = {}#{'13:50:00.500':{"IC2209": timestamp, "IF2207":timestamp}}
 TwoSourcesData = {}
 OneSourceGaps = {}
 TwoSourceGaps = {}
+OneSourceArrivals = {}
+TwoSourcesArrivals = {}
 import csv
 import numpy
 import pandas
 from scipy.stats import ttest_1samp
-def processlines(rows, result_dict):
+def processlines(rows, result_dict, arrivaltimeonly=False):
     for row in rows:
         if len(row)==5:
             arrivaltime, exchangetime, exchangemillisec, ticker,latency = row
@@ -22,7 +24,8 @@ def processlines(rows, result_dict):
             arrivaltime, exchangetime,  ticker,latency = row
             exchangemillisec='0'
         updatetime = '.'.join([exchangetime, exchangemillisec])
-        result_dict.setdefault( updatetime, {} ).setdefault( ticker, (float(arrivaltime), float(latency)) )
+        v = float(arrivaltime) if arrivaltimeonly else (float(arrivaltime), float(latency))
+        result_dict.setdefault( updatetime, {} ).setdefault( ticker, v )
     
     
         
@@ -75,4 +78,31 @@ def run( onesourcepaths = [ './ctp_accept_stats.csv' ], twosourcepaths = ['./ctp
         ts = ts[condition]
         t,p= ttest_1samp(ts,0.0)
         print("%s: mean=%s, the probability that mean=0 is <=%.4f"%(name, ts.mean(), p))
+    
+    
     return ts.mean(), ts.std(), t, p
+
+def runarrivaltime( onesourcepaths = [ './ctp_accept_stats.csv' ], twosourcepaths = ['./ctp_accept_IF2208_stats.csv', './ctp_accept_IF2207_stats.csv' ]  ):
+    onesourcelines=[]
+    twosourcelines = []
+    for onesourcepath in onesourcepaths:
+        onesourcelines += list(csv.reader(open(onesourcepath)))[1:]
+    for twosourcepath in twosourcepaths:        
+        twosourcelines += list(csv.reader(open(twosourcepath)))[1:]
+        print(twosourcepath, len(twosourcelines), twosourcelines[-1])
+    
+    processlines(onesourcelines, OneSourceArrivals, arrivaltimeonly=True)
+    processlines(twosourcelines, TwoSourcesArrivals, arrivaltimeonly=True)
+    
+    twosourcedf = pandas.DataFrame( TwoSourcesArrivals ).T
+    onesourcedf = pandas.DataFrame( OneSourceArrivals ).T
+    
+    for assetname in onesourcedf.columns:
+        ts = twosourcedf[assetname] - onesourcedf[assetname]
+        condition = ( (ts-ts.mean()).abs()<=5*ts.std() ) & (~pandas.isna(ts))
+        ts = ts[condition]
+        t,p = ttest_1samp(ts,0.0)
+        print("%s twosource-onesource: mean=%s, the probability that mean=0 is <=%.4f"%(assetname, ts.mean(), p))
+    
+    return onesourcedf, twosourcedf
+    
