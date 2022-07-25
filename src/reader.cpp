@@ -4,6 +4,7 @@
 #include "utils/stat.h"
 #include <signal.h>
 #include "ctpconfig.h"
+#include "common.h"
 //#include "utils.h"
 using std::cout;
 using std::endl;
@@ -32,8 +33,16 @@ void signal_callback_handler(int signum) {
    exit(signum);
 };
 
+void onDepthMarketData( void* pdata ){
+    auto data = static_cast<CThostFtdcDepthMarketDataField*> (pdata );
+    strcpy(TickedInstrumentIDs[tick_idx], data->InstrumentID);
+    strcpy(TickExchangeTimes[tick_idx], data->UpdateTime);
+    TickExchangeMillisecs[tick_idx] = data->UpdateMillisec;
+    TickProcessDurations[tick_idx] = getNanoTime() - TickedTimes[tick_idx];
+};
+
 int main() {
-    cpu_set_affinity(1);
+    cpu_set_affinity(2);
     signal(SIGINT, signal_callback_handler);
 //     auto reader=Reader::create("testReader");
     ReaderPtr readers[72];
@@ -42,7 +51,7 @@ int main() {
     int month=0;
     int reader_idx=0;
     std::vector<int> months={7,8,9,12};
-    std::vector<std::string> instruments={"IC2207","IC2208","IC2209","IC2212","IF2207","IF2208","IF2209","IF2212","IH2207","IH2208","IH2209","IH2212"};
+    std::vector<std::string> instruments={"SR209"};
     for (auto& instrument:instruments){
         reader = Reader::create(instrument.c_str());
         readers[reader_idx++]=reader;
@@ -59,14 +68,18 @@ int main() {
                 continue;
             else{
                 auto frame = Frame(frameptr);
+                auto msgtype = (MsgType)(frame.getMsgType());
     //             long duration=getNanoTime()-frame.getNano();
-                auto data = static_cast<CThostFtdcDepthMarketDataField*> (frame.getData() );
-                ++tick_idx;            
-                TickedTimes[tick_idx] = frame.getNano();            
-                strcpy(TickedInstrumentIDs[tick_idx], data->InstrumentID);
-                strcpy(TickExchangeTimes[tick_idx], data->UpdateTime);
-                TickExchangeMillisecs[tick_idx] = data->UpdateMillisec;
-                TickProcessDurations[tick_idx] = getNanoTime() - TickedTimes[tick_idx];
+                switch(msgtype){
+                    case MsgType::DepthMarketData:
+                        tick_idx++;
+                        TickedTimes[tick_idx] = frame.getNano();    
+                        onDepthMarketData(frame.getData());
+                        break;
+                        
+                }
+                
+                
             }
         }
     }

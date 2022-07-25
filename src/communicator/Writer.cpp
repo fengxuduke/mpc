@@ -7,11 +7,12 @@
 #include "../utils/macros.h"
 #include "../core/Journal.h"
 
-void Writer::WriteFrame(void * data,int len){
+void Writer::WriteFrame(void * data,int len, unsigned int msgtype){
 
     frame.set_address(journal->locateFrame());
     frame.setData(data,len);
     frame.setNano(getNanoTime());
+    frame.setMsg_type( msgtype );
     frame.setStatusWritten();
 }
 

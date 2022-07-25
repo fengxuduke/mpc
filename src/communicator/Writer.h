@@ -43,7 +43,7 @@ public:
 
 
 
-    virtual void WriteFrame(void * data,int len);
+    virtual void WriteFrame(void * data,int len, unsigned int msgtype_);
     static WriterPtr create(const char * dir,const char * jname);
     Frame frame;
     string getName()const{

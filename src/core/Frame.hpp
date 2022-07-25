@@ -46,6 +46,9 @@ public:
     FH_TYPE_LENGTH  getDataLength() const{
         return getFrameLength()-getHeaderLength();
     }
+    unsigned int getMsgType() const{
+        return frame_header->msg_type;
+    }
 
     /** get address of data field */
     void* getData() const{
@@ -54,6 +57,11 @@ public:
 
     void setNano(FH_TYPE_NANOTM nano_){
         frame_header->nano=nano_;
+    }
+    
+    /** set data type */
+    void setMsg_type(unsigned int msgtype_){
+        frame_header->msg_type = msgtype_;
     }
 
     /** set data with length */

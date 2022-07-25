@@ -2,6 +2,7 @@
 #define CTP_CONFIG_H
 #include "ctp/ThostFtdcUserApiStruct.h"
 #include "ctp/ThostFtdcMdApi.h"
+#include "ctp/exchangeassets.h"
 // simnow
 // char CTPFRONTQUOTEADDRESS[] = "tcp://116.239.24.41:51213";
 // char CTPBROKERID[] = "9999";

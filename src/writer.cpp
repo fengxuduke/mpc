@@ -4,6 +4,7 @@
 #include "utils/stat.h"
 #include <signal.h>
 #include "ctpconfig.h"
+#include "common.h"
 //#include "utils.h"
 using std::cout;
 using std::endl;
@@ -34,7 +35,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             for (auto& instrument : instruments){
                 ppInstruments[0]=(char*)&instrument[0];
                 papi_->SubscribeMarketData(ppInstruments, 1);
-                usleep(1000000);
+                usleep(10000);
             }
             return true;
         }; 
@@ -45,7 +46,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             for (auto& instrument:instruments){
                 ppInstruments[0]=(char*)&instrument[0];
                 papi_->UnSubscribeMarketData(ppInstruments, 1);
-                usleep(1000000);
+                usleep(10000);
             }
             return true;
         };
@@ -128,7 +129,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
         virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData){
 //             std:cout<<pDepthMarketData->InstrumentID<<" "<<pDepthMarketData->LastPrice<<std::endl;
             auto& writer = writers[pDepthMarketData->InstrumentID];
-            writer->WriteFrame(static_cast<void *>(pDepthMarketData), mktdata_length_); 
+            writer->WriteFrame(static_cast<void *>(pDepthMarketData), mktdata_length_, MsgType::DepthMarketData); 
             ++tick_idx;
             TickedTimes[tick_idx] = (writer->frame).getNano();
             strcpy(TickedInstrumentIDs[tick_idx], pDepthMarketData->InstrumentID);
@@ -139,6 +140,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
         };
         
         void dumptofile(  ){
+            std::cout<<"begin to dump"<<std::endl;
             int i=0;
             std::ofstream fout;
             fout.open(dumpfilepath_.c_str());
@@ -146,6 +148,7 @@ class MarketDataCTP: public CThostFtdcMdSpi {
             for(i=0;i<=tick_idx;i++){
                 fout<<TickedTimes[i]<<","<<TickExchangeTimes[i]<<","<<TickExchangeMillisecs[i]<<","<<TickedInstrumentIDs[i]<<","<<TickWriteDurations[i]<<std::endl;
             }
+            std::cout<<"finished dumping"<<std::endl;
         }
 
 
@@ -205,24 +208,41 @@ int main() {
         usleep(1000000);        
     }
     std::cout<<"Logged in, to collect insts to suscribe"<<std::endl;
+    std::cout<<"sizeof CThostFtdcDepthMarketDataField="<<sizeof(CThostFtdcDepthMarketDataField)<<std::endl;
+    std::cout<<"sizeof char="<<sizeof(char)<<std::endl;
+//     std::cout<<"sizeof testram="<<sizeof(testram)<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"IC2208", "IF2208"};
-//     for (month=1;month<=12;month++){
-//         sprintf(instrument, "IC22%02d", month);
-//         instruments.push_back(instrument);
-//         sprintf(instrument, "IF22%02d", month);
-//         instruments.push_back(instrument);
-//         sprintf(instrument, "IH22%02d", month);
-//         instruments.push_back(instrument);
-//         sprintf(instrument, "IC23%02d", month);
-//         instruments.push_back(instrument);
-//         sprintf(instrument, "IF23%02d", month);
-//         instruments.push_back(instrument);
-//         sprintf(instrument, "IH23%02d", month);
-//         instruments.push_back(instrument);
+    std::vector<std::string> instruments={"SR209"};
+//     std::vector<std::string> instruments={"IC2208", "IF2208"};
+//     std::vector<std::string> instruments;
+//     for (auto& item: ExchangeAssets){
+//         auto& exchange = item.first;
+//         auto& assets = item.second;
+//         for (auto& asset:assets){
+//             for (month=1;month<=12;month++){
+//                 if (exchange == "ZCE"){
+//                     continue;
+//                     sprintf(instrument, "%s2%02d", asset.c_str(), month);
+//                     instruments.push_back(instrument);
+//                     
+//                     sprintf(instrument, "%s3%02d", asset.c_str(), month);
+//                     instruments.push_back(instrument);
+//                 }
+//                 else if (exchange == "CFFE"){
+//                     sprintf(instrument, "%s22%02d", asset.c_str(), month);
+//                     instruments.push_back(instrument);
+//                     
+//                     sprintf(instrument, "%s23%02d", asset.c_str(), month);
+//                     instruments.push_back(instrument);
+//                     
+//                 }
+//                 
+//             }
+//         }
 //     }
-    marketdata.subscribe(instruments);
+     marketdata.subscribe(instruments);
+    
     
     std::cout<<"subscribed"<<std::endl;
     marketdata.Join();

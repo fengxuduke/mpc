@@ -8,6 +8,7 @@
 #include<string>
 #include<vector>
 #include<algorithm>
+#include<iostream>
 #include "../utils/macros.h"
 #include "../core/Journal.h"
 #include "../socketlib/ServerSocket.h"
@@ -53,7 +54,7 @@ typedef int MPC_UNREGIST_WRITER_STATUS;
 #define MPC_USER_NUM_OVERFLOW 99
 
 
-#define MPC_SysJournalMaxUsers 100
+#define MPC_SysJournalMaxUsers 100000
 
 #define MPC_CONNECT_PORT 32013
 
@@ -161,8 +162,10 @@ private:
     }
 
     MPC_REGIST_WRITER_STATUS RegistWriter(const char * writerName,const char * jname,int & idx){
-        if(writerJournal.find(string(writerName))!=writerJournal.end())
+        if(writerJournal.find(string(writerName))!=writerJournal.end()){
+            std::cout<<writerName<<" already exited"<<std::endl;
             return MPC_REGIST_WRITER_WRITER_EXISTS;
+        }
         for(auto iter=writerJournal.begin();iter!=writerJournal.end();++iter)
         {
             if(iter->second==string(jname))

@@ -1,7 +1,6 @@
 #ifndef MPC_FRAMEHEADER_H
 #define MPC_FRAMEHEADER_H
 
-
 // data types of all fields in frame header
 // which need to be fully controlled for data length.
 typedef unsigned char    FH_TYPE_STATUS;
@@ -33,6 +32,7 @@ struct FrameHeaderTMP
     /** total frame length (including header and errorMsg) */
     FH_TYPE_LENGTH      length;
     /*保留区域，用于用户自定义header数据*/
+    volatile unsigned int msg_type;
     char                preserve[N];
 }__attribute__((packed));
 
