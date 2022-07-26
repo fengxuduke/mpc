@@ -51,7 +51,7 @@ int main() {
     int month=0;
     int reader_idx=0;
     std::vector<int> months={7,8,9,12};
-    std::vector<std::string> instruments={"SR209"};
+    std::vector<std::string> instruments={"IC2208", "IF2208", "IH2208", "IC2209", "IF2209", "IH2209", "IC2212", "IF2212", "IH2212", "IC2303", "IF2303", "IH2303" };
     for (auto& instrument:instruments){
         reader = Reader::create(instrument.c_str());
         readers[reader_idx++]=reader;

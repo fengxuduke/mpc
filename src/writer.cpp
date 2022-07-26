@@ -213,8 +213,7 @@ int main() {
 //     std::cout<<"sizeof testram="<<sizeof(testram)<<std::endl;
     int month=0;
     TThostFtdcInstrumentIDType instrument;
-    std::vector<std::string> instruments={"SR209"};
-//     std::vector<std::string> instruments={"IC2208", "IF2208"};
+    std::vector<std::string> instruments={"IC2208", "IF2208", "IH2208", "IC2209", "IF2209", "IH2209", "IC2212", "IF2212", "IH2212", "IC2303", "IF2303", "IH2303" };
 //     std::vector<std::string> instruments;
 //     for (auto& item: ExchangeAssets){
 //         auto& exchange = item.first;
